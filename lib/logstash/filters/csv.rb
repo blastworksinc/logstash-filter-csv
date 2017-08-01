@@ -120,6 +120,9 @@ class LogStash::Filters::CSV < LogStash::Filters::Base
 
     if (source = event.get(@source))
       begin
+        # assume user passed \t and it was represented as '\\t'
+        @separator = @separator.gsub("\\t", "\t")
+
         values = CSV.parse_line(source, :col_sep => @separator, :quote_char => @quote_char)
 
         if (@autodetect_column_names && @columns.empty?)
